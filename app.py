@@ -3,7 +3,7 @@ from string import ascii_letters, digits
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__, template_folder='templates',static_folder='static')
+app = Flask(__name__, template_folder='templates', static_folder='static')
 
 app.debug = True
 app.secret_key = 'secret'
@@ -23,8 +23,7 @@ class Link(db.Model):
 
 @app.route('/')
 def index():
-    a = Link.query.all()
-    return render_template("index.html", a=a)
+    return render_template("index.html")
 
 
 @app.route('/', methods=['POST'])
@@ -34,9 +33,16 @@ def form_post():
         if not text[-1] is '+':
             text = text.replace('http://', '')
             text = text.replace('https://', '')
-            base_encode = encode()
-            save_to_db(text, base_encode)
-            return render_template("index.html")
+            is_db = Link.query.filter_by(link=text).first()
+            if not is_db:
+                base_encode = encode()
+                save_to_db(text, base_encode)
+                shortened_url = 'http://shorturldemo.com/' + base_encode
+                return render_template("index.html",shortened_url=shortened_url)
+            else:
+                url = Link.query.filter_by(link=text).first().shortedLink
+                shortened_url = 'http://shorturldemo.com/' + url
+                return render_template("index.html",shortened_url=shortened_url)
         else:
             try:
                 start = text.index('/')
