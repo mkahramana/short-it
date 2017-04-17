@@ -32,6 +32,8 @@ def form_post():
     if request.method == 'POST':
         text = request.form['link']
         if not text[-1] is '+':
+            text = text.replace('http://', '')
+            text = text.replace('https://', '')
             base_encode = encode()
             save_to_db(text, base_encode)
             return render_template("index.html")
