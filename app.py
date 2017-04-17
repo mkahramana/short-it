@@ -3,7 +3,7 @@ from string import ascii_letters, digits
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder='templates',static_folder='static')
 
 app.debug = True
 app.secret_key = 'secret'
