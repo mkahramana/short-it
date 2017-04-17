@@ -12,7 +12,7 @@ app.config.update({
 })
 db = SQLAlchemy(app)
 
-base = ascii_letters + digits
+BASE = ascii_letters + digits
 
 
 class Link(db.Model):
@@ -47,12 +47,11 @@ def form_post():
             try:
                 start = text.index('/')
                 url = text[start + 1:-1]
-                print(url)
                 base_decode = decode(url)
                 shortened_url = Link.query.filter_by(id=base_decode).first()
                 return redirect("http://" + shortened_url.url)
             except ValueError:
-                return 0
+                return redirect('/')
 
 
 def save_to_db(url, shortenedURL):
@@ -82,16 +81,12 @@ def encode():
     digits = to_base_62()
     encode_letters = ''
     for i in digits:
-        encode_letters += base[i]
+        encode_letters += BASE[i]
     return encode_letters
 
 
 def decode(id):
-    ids = []
-    for i in id:
-        letter_id = base.index(i)
-        ids.append(letter_id)
-    return sum([value * (62 ** key) for key, value in enumerate(ids[::-1])]) + 1
+    return sum([BASE.index(value) * (62 ** key) for key, value in enumerate(id[::-1])]) + 1
 
 
 if __name__ == '__main__':
