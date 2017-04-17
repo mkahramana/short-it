@@ -17,12 +17,19 @@
 </head>
 <body>
 <div class="container">
-    <form class="navbar-form navbar-left" action="." method="POST" role="search">
-        <div class="form-group">
-            <input type="text" name="link" class="form-control" required="true" placeholder="Short">
-        </div>
-        <input type="submit" name="link-form" value="Send" class="btn btn-default"></input>
-    </form>
+    <div class="content">
+        <form class="navbar-form navbar-left" action="." method="POST" role="search">
+            <div class="form-group">
+                <input type="text" name="link" class="form-control" required="true" placeholder="URL">
+            </div>
+            <input type="submit" name="link-form" value="Short" class="btn btn-default"></input>
+        </form>
+        <h5>To resolve shortened URL add '+' end of the
+        </h5>
+        {% if shortened_url %}
+        <a href="{{shortened_url}}" target="_blank">{{shortened_url}}</a>
+        {% endif %}
+    </div>
 </div>
 </body>
 </html>
