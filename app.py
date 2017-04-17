@@ -31,9 +31,19 @@ def index():
 def form_post():
     if request.method == 'POST':
         text = request.form['link']
-        base_encode=encode()
-        save_to_db(text, base_encode)
-    return render_template("index.html")
+        if not text[-1] is '+':
+            base_encode = encode()
+            save_to_db(text, base_encode)
+            return render_template("index.html")
+        else:
+            try:
+                start = text.index('/')
+                url = text[start + 1:-1]
+                base_decode = decode(url)
+                url = Link.query.filter_by(id=base_decode).first()
+                return redirect("http://" + url.link)
+            except ValueError:
+                return 0
 
 
 def save_to_db(url, sorted_link):
@@ -46,7 +56,7 @@ def save_to_db(url, sorted_link):
 
 
 def to_base_62():
-    number=len(Link.query.all())
+    number = len(Link.query.all())
     digits = []
     while number > 0:
         remainder = number % 62
@@ -56,11 +66,19 @@ def to_base_62():
 
 
 def encode():
-    digits=to_base_62()
+    digits = to_base_62()
     encode_letters = ''
     for i in digits:
         encode_letters += base[i]
     return encode_letters
+
+
+def decode(id):
+    ids = []
+    for i in id:
+        letter_id = base.index(i)
+        ids.append(letter_id)
+    return sum([value * (62 ** key) for key, value in enumerate(ids[::-1])]) + 1
 
 
 if __name__ == '__main__':
