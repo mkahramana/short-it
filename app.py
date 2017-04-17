@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 
@@ -18,7 +17,7 @@ class Link(db.Model):
     shortedLink = db.Column(db.String(6), unique=True)
 
 
-@app.route('/index')
+@app.route('/')
 def index():
     a=Link.query.all()
     return render_template("index.html",a=a)
