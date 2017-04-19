@@ -10,13 +10,16 @@
 <div class="container">
     <div class="content">
         <form action="." method="POST" role="search">
-            <div >
-                <input type="text" name="link"  required="true" placeholder="Your original URL here">
+            <div>
+                <input type="text" name="link" required="true" placeholder="Your original URL here">
             </div>
-            <input type="submit" name="link-form" value="SHORTEN URL" ></input>
+            <input type="submit" name="link-form" value="SHORTEN URL"></input>
         </form>
         {% if shortened_url %}
         <a href="{{shortened_url}}" target="_blank">{{shortened_url}}</a>
+        {% endif %}
+        {% if error %}
+        <p>{{error}}</p>
         {% endif %}
     </div>
 </div>

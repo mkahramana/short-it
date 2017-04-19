@@ -1,5 +1,6 @@
 from string import ascii_letters, digits
 
+import re
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 
@@ -29,29 +30,44 @@ def index():
 @app.route('/', methods=['POST'])
 def form_post():
     if request.method == 'POST':
-        text = request.form['link']
-        text = text.replace('http://', '')
-        text = text.replace('https://', '')
-        if not text[-1] is '+':
-            is_db = Link.query.filter_by(url=text).first()
-            if not is_db:
-                base_encode = encode()
-                save_to_db(text, base_encode)
-                shortened_url = 'http://shorturldemo.com/' + base_encode
-                return render_template("index.html", shortened_url=shortened_url)
-            else:
-                url = Link.query.filter_by(url=text).first().shortenedURL
-                shortened_url = 'http://shorturldemo.com/' + url
-                return render_template("index.html", shortened_url=shortened_url)
+        url = request.form['link']
+        if not valid_url(url):
+            error = "Unable to create short URL!"
+            return render_template("index.html", error=error)
         else:
-            try:
-                start = text.index('/')
-                url = text[start + 1:-1]
-                base_decode = decode(url)
-                shortened_url = Link.query.filter_by(id=base_decode).first()
-                return redirect("http://" + shortened_url.url)
-            except ValueError:
-                return redirect('/')
+            url = url.replace('https://', '')
+            url = url.replace('http://', '')
+            if not url[-1] is '+':
+                is_db = Link.query.filter_by(url=url).first()
+                if not is_db:
+                    base_encode = encode()
+                    save_to_db(url, base_encode)
+                    shortened_url = 'http://shorturldemo.com/' + base_encode
+                    return render_template("index.html", shortened_url=shortened_url)
+                else:
+                    encode_string = Link.query.filter_by(url=url).first().shortenedURL
+                    shortened_url = 'http://shorturldemo.com/' + encode_string
+                    return render_template("index.html", shortened_url=shortened_url)
+            else:
+                try:
+                    start = url.index('/')
+                    encode_string = url[start + 1:-1]
+                    base_decode = decode(encode_string)
+                    shortened_url = Link.query.filter_by(id=base_decode).first()
+                    return redirect("http://" + shortened_url.url)
+                except ValueError:
+                    return redirect('/')
+
+
+def valid_url(url):
+    pattern = re.compile(
+        r'^(?:http|ftp)s?://'
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'
+        r'localhost|'  # localhost...
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
+        r'(?::\d+)?'
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+    return re.match(pattern, url)
 
 
 def save_to_db(url, shortenedURL):
