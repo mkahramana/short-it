@@ -35,8 +35,7 @@ def form_post():
             error = "Unable to create short URL!"
             return render_template("index.html", error=error)
         else:
-            url = url.replace('https://', '')
-            url = url.replace('http://', '')
+            url = discard_http(url)
             if not url[-1] is '+':
                 is_db = Link.query.filter_by(url=url).first()
                 if not is_db:
@@ -63,11 +62,18 @@ def valid_url(url):
     pattern = re.compile(
         r'^(?:http|ftp)s?://'
         r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'
-        r'localhost|'  # localhost...
-        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
+        r'localhost|'
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
         r'(?::\d+)?'
         r'(?:/?|[/?]\S+)$', re.IGNORECASE)
     return re.match(pattern, url)
+
+
+def discard_http(url):
+    pattern = r'^https?:\/\/'
+    replace = re.compile(pattern)
+    url = replace.sub('', url)
+    return url
 
 
 def save_to_db(url, shortenedURL):
