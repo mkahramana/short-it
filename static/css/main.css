@@ -1,14 +1,18 @@
+body {
+    font-family: "Open Sans";
+}
+
+#error {
+    color: red;
+    font-weight: bold;
+}
+
 .container {
     height: 80vh;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-
-/*.search input[type="search"] {
-    width: 400px;
-    height: 50px;
-}*/
 
 input {
     border: none;

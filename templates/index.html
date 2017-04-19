@@ -5,6 +5,7 @@
     <title>Shorten URL</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/reset.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -13,13 +14,13 @@
             <div>
                 <input type="text" name="link" required="true" placeholder="Your original URL here">
             </div>
-            <input type="submit" name="link-form" value="SHORTEN URL"></input>
+            <input id="button" type="submit" name="link-form" value="SHORTEN URL"></input>
         </form>
         {% if shortened_url %}
-        <a href="{{shortened_url}}" target="_blank">{{shortened_url}}</a>
+        <p><a href="{{shortened_url}}" target="_blank">{{shortened_url}}</a></p>
         {% endif %}
         {% if error %}
-        <p>{{error}}</p>
+        <p id="error">{{error}}</p>
         {% endif %}
     </div>
 </div>
