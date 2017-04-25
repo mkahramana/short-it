@@ -61,11 +61,10 @@ def resolve_url(encode_string):
         except ValueError:
             return redirect('/')
     else:
-        encode_string=encode_string[:-1]
+        encode_string = encode_string[:-1]
         decode_string = decode(encode_string)
         shortened_url = Link.query.filter_by(id=decode_string).first()
-        return render_template('index.html', shortened_url='http://'+shortened_url.url)
-
+        return render_template('index.html', shortened_url='http://' + shortened_url.url)
 
 
 def valid_url(url):
@@ -110,11 +109,7 @@ def to_base_62():
 
 
 def encode():
-    digits = to_base_62()
-    encode_letters = ''
-    for i in digits:
-        encode_letters += BASE[i]
-    return encode_letters
+    return ''.join(BASE[i] for i in to_base_62())
 
 
 def decode(id):
