@@ -5,7 +5,11 @@
     <title>Shorten URL</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/reset.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+    <script src="{{ url_for('static',filename='js/main.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="{{ url_for('static',filename='sweetalert/sweetalert.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static',filename='sweetalert/sweetalert.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,900" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -14,13 +18,25 @@
             <div>
                 <input type="text" name="link" required="true" placeholder="Your original URL here">
             </div>
-            <input id="button" type="submit" name="link-form" value="SHORTEN URL"></input>
+            <input type="submit" name="link-form" value="SHORTEN URL"></input>
         </form>
         {% if shortened_url %}
-        <p><a href="{{shortened_url}}" target="_blank">{{shortened_url}}</a></p>
+            <script>
+                swal({
+                    title: "Your short URL",
+                    text: "{{shortened_url}}",
+                    type: "success",
+                    html: true
+                });
+            </script>
         {% endif %}
         {% if error %}
-        <p id="error">{{error}}</p>
+            <script>
+                swal({
+                    title: "{{error}}",
+                    type: "error",
+                });
+            </script>
         {% endif %}
     </div>
 </div>

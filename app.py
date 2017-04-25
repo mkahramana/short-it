@@ -15,7 +15,7 @@ db = SQLAlchemy(app)
 
 BASE = ascii_letters + digits
 HOST = '127.0.0.1'
-PORT = 1000
+PORT = 5000
 
 
 class Link(db.Model):

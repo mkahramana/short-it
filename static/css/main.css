@@ -1,10 +1,5 @@
 body {
-    font-family: "Open Sans";
-}
-
-#error {
-    color: red;
-    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
 }
 
 .container {
@@ -15,6 +10,7 @@ body {
 }
 
 input {
+    font-family: 'Roboto', sans-serif;
     border: none;
     padding: 10px;
     margin: 10px;
@@ -33,6 +29,8 @@ input:focus {
 }
 
 input[type="submit"] {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
     border-radius: 2px;
     background: #f2f2f2;
     border: 1px solid #f2f2f2;
@@ -46,9 +44,15 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
     background: #f8f8f8;
     border: 1px solid #c6c6c6;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
     color: #222;
+}
+
+i {
+    padding-left: 10px;
 }
