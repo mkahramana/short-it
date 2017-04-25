@@ -14,7 +14,8 @@ app.config.update({
 db = SQLAlchemy(app)
 
 BASE = ascii_letters + digits
-
+HOST='127.0.0.1'
+PORT=5000
 
 class Link(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -41,11 +42,11 @@ def form_post():
                 if not is_db:
                     base_encode = encode()
                     save_to_db(url, base_encode)
-                    shortened_url = 'http://shorturldemo.com/' + base_encode
+                    shortened_url = 'http://'+HOST+':'+str(PORT)+'/' + base_encode
                     return render_template("index.html", shortened_url=shortened_url)
                 else:
                     encode_string = Link.query.filter_by(url=url).first().shortenedURL
-                    shortened_url = 'http://shorturldemo.com/' + encode_string
+                    shortened_url = 'http://'+HOST+':'+str(PORT)+'/' + encode_string
                     return render_template("index.html", shortened_url=shortened_url)
             else:
                 try:
@@ -113,4 +114,4 @@ def decode(id):
 
 if __name__ == '__main__':
     db.create_all()
-    app.run()
+    app.run(host=HOST,port=PORT)
