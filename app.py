@@ -14,8 +14,9 @@ app.config.update({
 db = SQLAlchemy(app)
 
 BASE = ascii_letters + digits
-HOST='127.0.0.1'
-PORT=5000
+HOST = '127.0.0.1'
+PORT = 1000
+
 
 class Link(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -25,7 +26,7 @@ class Link(db.Model):
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template('index.html')
 
 
 @app.route('/', methods=['POST'])
@@ -33,8 +34,8 @@ def form_post():
     if request.method == 'POST':
         url = request.form['link']
         if not valid_url(url):
-            error = "Unable to create short URL!"
-            return render_template("index.html", error=error)
+            error = 'Unable to create short URL!'
+            return render_template('index.html', error=error)
         else:
             url = discard_http(url)
             if not url[-1] is '+':
@@ -42,21 +43,29 @@ def form_post():
                 if not is_db:
                     base_encode = encode()
                     save_to_db(url, base_encode)
-                    shortened_url = 'http://'+HOST+':'+str(PORT)+'/' + base_encode
-                    return render_template("index.html", shortened_url=shortened_url)
+                    shortened_url = 'http://' + HOST + ':' + str(PORT) + '/' + base_encode
+                    return render_template('index.html', shortened_url=shortened_url)
                 else:
                     encode_string = Link.query.filter_by(url=url).first().shortenedURL
-                    shortened_url = 'http://'+HOST+':'+str(PORT)+'/' + encode_string
-                    return render_template("index.html", shortened_url=shortened_url)
-            else:
-                try:
-                    start = url.index('/')
-                    encode_string = url[start + 1:-1]
-                    base_decode = decode(encode_string)
-                    shortened_url = Link.query.filter_by(id=base_decode).first()
-                    return redirect("http://" + shortened_url.url)
-                except ValueError:
-                    return redirect('/')
+                    shortened_url = 'http://' + HOST + ':' + str(PORT) + '/' + encode_string
+                    return render_template('index.html', shortened_url=shortened_url)
+
+
+@app.route('/<encode_string>')
+def resolve_url(encode_string):
+    if not encode_string[-1] is '+':
+        try:
+            decode_string = decode(encode_string)
+            shortened_url = Link.query.filter_by(id=decode_string).first()
+            return redirect('http://' + shortened_url.url)
+        except ValueError:
+            return redirect('/')
+    else:
+        encode_string=encode_string[:-1]
+        decode_string = decode(encode_string)
+        shortened_url = Link.query.filter_by(id=decode_string).first()
+        return render_template('index.html', shortened_url='http://'+shortened_url.url)
+
 
 
 def valid_url(url):
@@ -114,4 +123,4 @@ def decode(id):
 
 if __name__ == '__main__':
     db.create_all()
-    app.run(host=HOST,port=PORT)
+    app.run(host=HOST, port=PORT)
