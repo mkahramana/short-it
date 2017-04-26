@@ -41,8 +41,18 @@
         {% if error %}
             <script>
                 swal({
-                    title: "{{error}}",
+                    title: "{{ error }}",
                     type: "error"
+                });
+            </script>
+        {% endif %}
+        {% if not_exist %}
+            <script>
+                swal({
+                    title: "404: Page not found",
+                    text: "<span style='font-weight:bold'>{{ not_exist }}</span> does not exist.",
+                    type: "error",
+                    html: true
                 });
             </script>
         {% endif %}

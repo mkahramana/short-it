@@ -53,17 +53,20 @@ def form_post():
 @app.route('/<encode_string>')
 def resolve_url(encode_string):
     if not encode_string[-1] is '+':
-        try:
-            decode_string = decode(encode_string)
-            shortened_url = Link.query.filter_by(id=decode_string).first()
-            return redirect('http://' + shortened_url.url)
-        except ValueError:
-            return redirect('/')
+        decode_string = decode(encode_string)
+        shorten_url = Link.query.filter_by(id=decode_string).first()
+        if shorten_url is not None:
+            return redirect('http://' + shorten_url.url)
+        else:
+            return render_template('index.html', not_exist='http://' + HOST + ':' + str(PORT) + '/' + encode_string)
     else:
         encode_string = encode_string[:-1]
         decode_string = decode(encode_string)
         original_url = Link.query.filter_by(id=decode_string).first()
-        return render_template('index.html', original_url='http://' + original_url.url)
+        if original_url is not None:
+            return render_template('index.html', original_url='http://' + original_url.url)
+        else:
+            return render_template('index.html', not_exist='http://' + HOST + ':' + str(PORT) + '/' + encode_string)
 
 
 def valid_url(url):
@@ -90,6 +93,7 @@ def save_to_db(url, shorten_url):
         is_db = Link(url=url, shortenURL=shorten_url)
         db.session.add(is_db)
         db.session.commit()
+
 
 def to_base_62():
     number = len(Link.query.all())
