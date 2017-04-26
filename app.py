@@ -45,7 +45,7 @@ def form_post():
                 shortened_url = 'http://' + HOST + ':' + str(PORT) + '/' + base_encode
                 return render_template('index.html', shortened_url=shortened_url)
             else:
-                encode_string = Link.query.filter_by(url=url).first().shortenedURL
+                encode_string = Link.query.filter_by(url=url).first().shortenURL
                 shortened_url = 'http://' + HOST + ':' + str(PORT) + '/' + encode_string
                 return render_template('index.html', shortened_url=shortened_url)
 

@@ -53,6 +53,12 @@ input[type="submit"]:hover {
     color: #222;
 }
 
+a {
+    color: #797979;
+    text-decoration: none;
+}
+
 i {
-    padding-left: 10px;
+    cursor: pointer;
+    padding-left: 4px;
 }

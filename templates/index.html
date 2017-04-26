@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Shorten URL</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/reset.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
-    <script src="{{ url_for('static',filename='js/main.js') }}"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-    <script src="{{ url_for('static',filename='sweetalert/sweetalert.min.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static',filename='sweetalert/sweetalert.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,900" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static',filename='sweetalert/sweetalert.css') }}">
+    <script src="{{ url_for('static',filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static',filename='sweetalert/sweetalert.min.js') }}"></script>
 </head>
 <body>
 <div class="container">
@@ -24,7 +25,7 @@
             <script>
                 swal({
                     title: "Your short URL",
-                    text: "{{shortened_url}}",
+                    text: "<a id='url' href={{shortened_url}}>{{shortened_url}}</a> <i onclick=\"copyToClipboard('#url')\" class=\"fa fa-clone\" aria-hidden=\"true\"></i>",
                     type: "success",
                     html: true
                 });
@@ -34,7 +35,8 @@
             <script>
                 swal({
                     title: "Original URL",
-                    text: "{{original_url}}"
+                    text: "<a id='url' href={{original_url}}>{{original_url}}</a> <i onclick=\"copyToClipboard('#url')\" class=\"fa fa-clone\" aria-hidden=\"true\"></i>",
+                    html: true
                 });
             </script>
         {% endif %}
