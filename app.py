@@ -21,7 +21,7 @@ PORT = 5000
 class Link(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     url = db.Column(db.String(255), unique=True)
-    shortenedURL = db.Column(db.String(6), unique=True)
+    shortenURL = db.Column(db.String(6), unique=True)
 
 
 @app.route('/')
@@ -38,17 +38,16 @@ def form_post():
             return render_template('index.html', error=error)
         else:
             url = discard_http(url)
-            if not url[-1] is '+':
-                is_db = Link.query.filter_by(url=url).first()
-                if not is_db:
-                    base_encode = encode()
-                    save_to_db(url, base_encode)
-                    shortened_url = 'http://' + HOST + ':' + str(PORT) + '/' + base_encode
-                    return render_template('index.html', shortened_url=shortened_url)
-                else:
-                    encode_string = Link.query.filter_by(url=url).first().shortenedURL
-                    shortened_url = 'http://' + HOST + ':' + str(PORT) + '/' + encode_string
-                    return render_template('index.html', shortened_url=shortened_url)
+            is_db = Link.query.filter_by(url=url).first()
+            if not is_db:
+                base_encode = encode()
+                save_to_db(url, base_encode)
+                shortened_url = 'http://' + HOST + ':' + str(PORT) + '/' + base_encode
+                return render_template('index.html', shortened_url=shortened_url)
+            else:
+                encode_string = Link.query.filter_by(url=url).first().shortenedURL
+                shortened_url = 'http://' + HOST + ':' + str(PORT) + '/' + encode_string
+                return render_template('index.html', shortened_url=shortened_url)
 
 
 @app.route('/<encode_string>')
@@ -63,8 +62,8 @@ def resolve_url(encode_string):
     else:
         encode_string = encode_string[:-1]
         decode_string = decode(encode_string)
-        shortened_url = Link.query.filter_by(id=decode_string).first()
-        return render_template('index.html', shortened_url='http://' + shortened_url.url)
+        original_url = Link.query.filter_by(id=decode_string).first()
+        return render_template('index.html', original_url='http://' + original_url.url)
 
 
 def valid_url(url):
@@ -85,14 +84,12 @@ def discard_http(url):
     return url
 
 
-def save_to_db(url, shortenedURL):
+def save_to_db(url, shorten_url):
     is_db = Link.query.filter_by(url=url).first()
     if not is_db:
-        is_db = Link(url=url, shortenedURL=shortenedURL)
+        is_db = Link(url=url, shortenURL=shorten_url)
         db.session.add(is_db)
         db.session.commit()
-        return redirect('/')
-
 
 def to_base_62():
     number = len(Link.query.all())

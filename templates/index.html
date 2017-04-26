@@ -30,11 +30,19 @@
                 });
             </script>
         {% endif %}
+        {% if original_url %}
+            <script>
+                swal({
+                    title: "Original URL",
+                    text: "{{original_url}}"
+                });
+            </script>
+        {% endif %}
         {% if error %}
             <script>
                 swal({
                     title: "{{error}}",
-                    type: "error",
+                    type: "error"
                 });
             </script>
         {% endif %}
